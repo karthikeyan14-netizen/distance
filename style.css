@@ -1,4 +1,4 @@
-/* White background and center everything */
+/* Page layout */
 body {
   background-color: white;
   font-family: Arial, sans-serif;
@@ -9,6 +9,7 @@ body {
   margin: 0;
 }
 
+/* Main card */
 .container {
   text-align: center;
   padding: 30px;
@@ -24,8 +25,8 @@ body {
   margin-top: 20px;
 }
 
-/* Base button styling */
-button {
+/* Default buttons (Start / Restart) */
+.controls button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -36,16 +37,15 @@ button {
   transition: background-color 0.3s;
 }
 
-/* Hover & active states */
-button:hover {
+.controls button:hover {
   background-color: #0056b3;
 }
 
-button:active {
+.controls button:active {
   background-color: #003f7f;
 }
 
-/* Restart button style */
+/* Restart button */
 #restartBtn {
   background-color: #dc3545;
 }
@@ -56,4 +56,30 @@ button:active {
 
 #restartBtn:active {
   background-color: #8b1f2a;
+}
+
+/* 📍 Location toggle button (top-left) */
+#locationToggle {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+#locationToggle:hover {
+  background: #f0f0f0;
+}
+
+#locationToggle:active {
+  background: #dd551f;
 }
