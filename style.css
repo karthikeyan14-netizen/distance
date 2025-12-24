@@ -16,7 +16,15 @@ body {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Button styling */
+/* Controls wrapper */
+.controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Base button styling */
 button {
   background-color: #007bff;
   color: white;
@@ -25,14 +33,27 @@ button {
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
   transition: background-color 0.3s;
 }
 
+/* Hover & active states */
 button:hover {
   background-color: #0056b3;
 }
 
 button:active {
   background-color: #003f7f;
+}
+
+/* Restart button style */
+#restartBtn {
+  background-color: #dc3545;
+}
+
+#restartBtn:hover {
+  background-color: #b52a37;
+}
+
+#restartBtn:active {
+  background-color: #8b1f2a;
 }
