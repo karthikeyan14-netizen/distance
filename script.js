@@ -49,7 +49,7 @@ function onLocation(pos) {
   last = current;
 
   document.getElementById("distance").innerText =
-    (totalMeters / 1000).toFixed(2) + " km";
+    (totalMeters).toFixed(2) + " meters";
 }
 
 function startOdometer() {
@@ -76,3 +76,4 @@ function stopOdometer() {
     console.log("Odometer stopped");
   }
 }
+
