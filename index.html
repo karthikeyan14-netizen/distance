@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Distance Tracker</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>GPS Odometer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Location Toggle Button (TOP LEFT) -->
-  <button id="locationToggle">📍 OFF</button>
-
   <div class="container">
-    <h1>Distance Tracker</h1>
+    <h1>GPS Odometer</h1>
 
-    <p>
-      this is valid only for distance above 50 meters:
-      <span id="counter">0</span>
-    </p>
-
-    <div class="controls">
-      <button id="startPauseBtn">▶ Start</button>
-      <button id="restartBtn">⟲ Restart</button>
+    <div class="display">
+      <span id="distance">0.00 km</span>
     </div>
+
+    <div class="buttons">
+      <button onclick="startOdometer()">Start</button>
+      <button onclick="stopOdometer()">Stop</button>
+    </div>
+
+    <p class="note">
+      Move to measure distance. Works best outdoors with GPS.
+    </p>
   </div>
 
+  <!-- Your JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>

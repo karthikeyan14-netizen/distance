@@ -1,85 +1,71 @@
-/* Page layout */
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
-  background-color: white;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   margin: 0;
-}
-
-/* Main card */
-.container {
-  text-align: center;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-/* Controls wrapper */
-.controls {
+  height: 100vh;
+  background: #0f172a;
   display: flex;
-  gap: 15px;
+  align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  color: #e5e7eb;
 }
 
-/* Default buttons (Start / Restart) */
-.controls button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 15px 25px;
+.container {
+  background: #020617;
+  padding: 30px;
+  width: 300px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.display {
+  background: #020617;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
   font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.controls button:hover {
-  background-color: #0056b3;
-}
-
-.controls button:active {
-  background-color: #003f7f;
-}
-
-/* Restart button */
-#restartBtn {
-  background-color: #dc3545;
-}
-
-#restartBtn:hover {
-  background-color: #b52a37;
-}
-
-#restartBtn:active {
-  background-color: #8b1f2a;
-}
-
-/* 📍 Location toggle button (top-left) */
-#locationToggle {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 9999;
-
-  background: white;
-  color: black;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
-  padding: 8px 10px;
-
-  font-size: 14px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  background: #38bdf8;
+  color: #020617;
+  transition: transform 0.1s, background 0.2s;
 }
 
-#locationToggle:hover {
-  background: #f0f0f0;
+button:hover {
+  background: #0ea5e9;
 }
 
-#locationToggle:active {
-  background: #dd551f;
+button:active {
+  transform: scale(0.97);
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #94a3b8;
 }

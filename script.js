@@ -1,148 +1,78 @@
-// =======================
-// STATE
-// =======================
-let lastPosition = null;
-let count = 0;
+let watchId = null;
+let last = null;
+let totalMeters = 0;
 
-let watchId = null;          // geolocation watcher
-let isTracking = false;      // Start / Pause state
-let locationEnabled = false; // 📍 ON / OFF state
+function rad(v) {
+  return v * Math.PI / 180;
+}
 
-// =======================
-// ELEMENTS
-// =======================
-const counterEl = document.getElementById("counter");
-const startPauseBtn = document.getElementById("startPauseBtn");
-const restartBtn = document.getElementById("restartBtn");
-const locationBtn = document.getElementById("locationToggle");
+function haversine(a, b) {
+  const R = 6371000;
+  const dLat = rad(b.lat - a.lat);
+  const dLon = rad(b.lon - a.lon);
 
-// =======================
-// DISTANCE CALCULATION
-// =======================
-function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
-  const R = 6371000; // meters
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-
-  const a =
+  const h =
     Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
+    Math.cos(rad(a.lat)) *
+    Math.cos(rad(b.lat)) *
     Math.sin(dLon / 2) ** 2;
 
-  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  return 2 * R * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
 }
 
-// =======================
-// LOCATION HANDLER
-// =======================
-function trackPosition(position) {
-  const { latitude, longitude } = position.coords;
+function onLocation(pos) {
+  const { latitude, longitude, accuracy } = pos.coords;
+  const time = pos.timestamp;
 
-  if (!lastPosition) {
-    lastPosition = { latitude, longitude };
-    return;
+  const current = {
+    lat: latitude,
+    lon: longitude,
+    time
+  };
+
+  if (last) {
+    const dt = (current.time - last.time) / 1000; // sec
+    if (dt > 0) {
+      const d = haversine(last, current);
+      const speed = d / dt; // m/s
+
+      // ODOMETER RULES
+      const MAX_SPEED = 60; // m/s (~216 km/h)
+      const MIN_MOVE = Math.max(accuracy, 4); // meters
+
+      if (speed <= MAX_SPEED && d >= MIN_MOVE) {
+        totalMeters += d;
+      }
+    }
   }
 
-  const distance = getDistanceFromLatLonInMeters(
-    lastPosition.latitude,
-    lastPosition.longitude,
-    latitude,
-    longitude
-  );
+  last = current;
 
-  if (distance >= 50) {
-    count++;
-    counterEl.textContent = count;
-    lastPosition = { latitude, longitude };
-    console.log(`50 meters traveled. Count: ${count}`);
-  }
+  document.getElementById("distance").innerText =
+    (totalMeters / 1000).toFixed(2) + " km";
 }
 
-// =======================
-// START GEOLOCATION
-// =======================
-function startGeolocation() {
-  if (!navigator.geolocation) {
-    alert("Geolocation is not supported.");
-    return;
-  }
+function startOdometer() {
+  totalMeters = 0;
+  last = null;
 
   watchId = navigator.geolocation.watchPosition(
-    trackPosition,
-    (error) => {
-      console.log("Location error:", error.message);
-      stopGeolocation();
-    },
-    { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 }
+    onLocation,
+    err => console.error(err),
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 1000
+    }
   );
+
+  console.log("Odometer started");
 }
 
-// =======================
-// STOP GEOLOCATION
-// =======================
-function stopGeolocation() {
-  if (watchId !== null) {
+function stopOdometer() {
+  if (watchId) {
     navigator.geolocation.clearWatch(watchId);
     watchId = null;
+    console.log("Odometer stopped");
   }
 }
-
-// =======================
-// 📍 LOCATION TOGGLE (MASTER SWITCH)
-// =======================
-locationBtn.addEventListener("click", () => {
-  if (!locationEnabled) {
-    locationEnabled = true;
-    locationBtn.textContent = "📍 ON";
-
-    // Start tracking only if Start button is active
-    if (isTracking) startGeolocation();
-  } else {
-    locationEnabled = false;
-    locationBtn.textContent = "📍 OFF";
-
-    stopGeolocation();
-  }
-});
-
-// =======================
-// ▶ START / ⏸ PAUSE
-// =======================
-startPauseBtn.addEventListener("click", () => {
-  if (!locationEnabled) {
-    alert("Please turn ON location first 📍");
-    return;
-  }
-
-  if (!isTracking) {
-    // START
-    startGeolocation();
-    isTracking = true;
-    startPauseBtn.textContent = "⏸ Pause";
-  } else {
-    // PAUSE
-    stopGeolocation();
-    isTracking = false;
-    startPauseBtn.textContent = "▶ Start";
-  }
-});
-
-// =======================
-// ⟲ RESTART
-// =======================
-restartBtn.addEventListener("click", () => {
-  stopGeolocation();
-
-  lastPosition = null;
-  count = 0;
-  isTracking = false;
-
-  counterEl.textContent = 0;
-  startPauseBtn.textContent = "▶ Start";
-
-  // If location is ON, keep permission but not tracking
-  if (locationEnabled) {
-    console.log("Location ready, waiting for Start");
-  }
-});
